@@ -6,14 +6,14 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by( username: params[:session][:username] )
     if user && user.authenticate( params[:session][:password] )
-      session[:user_id] = user_id
+      session[:user_id] = user.id
       flash[:notice] = "You're ready to brew!"
-      redirect_to user_path( current_use )
+      redirect_to user_path( current_user )
     else
       flash.now[:notice] = "Give that another try!"
       render :new
     end
-  end 
+  end
 
   def destroy
     session.clear
