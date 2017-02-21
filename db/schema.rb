@@ -10,10 +10,50 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161027041028) do
+ActiveRecord::Schema.define(version: 20170221003152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "ingredients", force: :cascade do |t|
+    t.string   "name"
+    t.string   "ingredient_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  create_table "recipe_ingredients", force: :cascade do |t|
+    t.integer  "ingredient_id"
+    t.integer  "recipes_id"
+    t.integer  "amount"
+    t.string   "amount_measurement_type"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.index ["ingredient_id"], name: "index_recipe_ingredients_on_ingredient_id", using: :btree
+    t.index ["recipes_id"], name: "index_recipe_ingredients_on_recipes_id", using: :btree
+  end
+
+  create_table "recipes", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "style_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["style_id"], name: "index_recipes_on_style_id", using: :btree
+  end
+
+  create_table "styles", force: :cascade do |t|
+    t.integer  "category_id"
+    t.string   "name"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["category_id"], name: "index_styles_on_category_id", using: :btree
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"
@@ -24,4 +64,8 @@ ActiveRecord::Schema.define(version: 20161027041028) do
     t.integer  "role",            default: 0
   end
 
+  add_foreign_key "recipe_ingredients", "ingredients"
+  add_foreign_key "recipe_ingredients", "recipes", column: "recipes_id"
+  add_foreign_key "recipes", "styles"
+  add_foreign_key "styles", "categories"
 end
