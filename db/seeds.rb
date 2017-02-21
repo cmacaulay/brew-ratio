@@ -21,5 +21,7 @@ def import_styles_from_csv
   puts "Styles Complete!"
 end
 
+
+
 import_categories_from_csv
 import_styles_from_csv
